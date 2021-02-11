@@ -64,7 +64,7 @@ async def on_message(message):
   if message.author == client.user:
     return
 
-  # The content of a user's message to check against
+  # The content of a user's message
   msg = message.content
 
   # The command to trigger the bot
