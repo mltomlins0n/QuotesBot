@@ -4,6 +4,7 @@ import requests
 import json
 import random
 from replit import db
+from keep_alive import keep_alive
 
 # Create an instance of a client to connect to discord
 client = discord.Client()
@@ -119,6 +120,7 @@ async def on_message(message):
     else:
       db['responding'] = False
       await message.channel.send('Responding is off. IDGAF about your sadness.')
-
+# Run the web server
+keep_alive()
 # Run the bot
 client.run(os.getenv('TOKEN'))
