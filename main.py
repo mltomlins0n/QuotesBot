@@ -8,6 +8,8 @@ from keep_alive import keep_alive
 
 # Create an instance of a client to connect to discord
 client = discord.Client()
+# The default URL of the jokes API to build a request from
+baseURL = "https://v2.jokeapi.dev/"
 
 # List of words that will trigger encouragemenent
 sad_words = ["sad", "depressed", "depressing", "miserable", "unhappy",
@@ -34,7 +36,13 @@ def get_quote():
   quote = json_data[0] ['q'] + ' - ' + json_data[0] ['a']
   return quote
 
-# TODO - Get random jokes from an API
+# Get a random joke with no filter
+def get_joke():
+  response = requests.get(baseURL + "/joke/Any?type=single")
+  json_data = json.loads(response.text)
+  # Parse the joke from the API response
+  joke = json_data['joke']
+  return joke
 
 # Allow users to add custom encouraging messages
 def update_encouragement(encouraging_message):
@@ -73,6 +81,11 @@ async def on_message(message):
     quote = get_quote()
     # The bot's reply
     await message.channel.send(quote)
+  
+  # Tell a joke
+  if msg.startswith("!joke"):
+    joke = get_joke()
+    await message.channel.send(joke)
 
   if db['responding']:
     options = starter_encouragements
@@ -120,6 +133,7 @@ async def on_message(message):
     else:
       db['responding'] = False
       await message.channel.send('Responding is off. IDGAF about your sadness.')
+
 # Run the web server
 keep_alive()
 # Run the bot
