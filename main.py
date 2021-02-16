@@ -66,10 +66,13 @@ def delete_encouragement(index):
 # When bot is ready
 async def on_ready():
   print("Logged in as {0.user}".format(client))
+  # Set the bot's presence info
+  await client.change_presence(activity = discord.Game("type !commands for help"))
 
 @client.event
 # If bot receives a message
 async def on_message(message):
+  # Stop the bot from replying to itself
   if message.author == client.user:
     return
 
@@ -86,9 +89,8 @@ async def on_message(message):
     message you're about to delete.
     Type `!new` followed by your message to add a new
     custom encouraging message, be nice!
-    Type `!del` and a no. from 0 to the current no. of custom
-    messages to delete that message, in case it turns out to be
-    wildly inappropriate. E.g. `!del 0` deletes the first message in the list.
+    Type `!del` and a no. from 0 to the current no. of custom messages to delete that message, in case it turns out to be wildly inappropriate. 
+    E.g. `!del 0` deletes the first message in the list.
     `!responding` - use `!responding off` to stop the bot from 
     responding to trigger words.
     use `!responding on` to turn it back on. Responding is on 
