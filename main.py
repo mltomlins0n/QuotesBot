@@ -25,15 +25,15 @@ starter_encouragements = [
 ]
 
 # Boolean to decide if the bot is responding to trigger words
-if 'responding' not in db.keys():
-  db['responding'] = True
+if "responding" not in db.keys():
+  db["responding"] = True
 
 # Returns a quote from the API
 def get_quote():
-  response = requests.get('https://zenquotes.io/api/random')
+  response = requests.get("https://zenquotes.io/api/random")
   json_data = json.loads(response.text)
   # Get the quote and author from the API response
-  quote = json_data[0] ['q'] + ' - ' + json_data[0] ['a']
+  quote = json_data[0] ["q"] + " - " + json_data[0] ["a"]
   return quote
 
 # Get a random joke with no filter
@@ -41,31 +41,31 @@ def get_joke():
   response = requests.get(baseURL + "/joke/Any?type=single")
   json_data = json.loads(response.text)
   # Parse the joke from the API response
-  joke = json_data['joke']
+  joke = json_data["joke"]
   return joke
 
 # Allow users to add custom encouraging messages
 def update_encouragement(encouraging_message):
   # Get all messages, add the new one and resave the database
-  if 'encouragements' in db.keys():
-    encouragements = db['encouragements']
+  if "encouragements" in db.keys():
+    encouragements = db["encouragements"]
     encouragements.append(encouraging_message)
-    db['encouragements'] = encouragements
+    db["encouragements"] = encouragements
   else: # Create a new entry in the database
-    db['encouragements'] = [encouraging_message]
+    db["encouragements"] = [encouraging_message]
 
 # Delete a message
 def delete_encouragement(index):
-  encouragements = db['encouragements']
+  encouragements = db["encouragements"]
   if len(encouragements) > index:
     del encouragements[index]
-    db['encouragements'] = encouragements
+    db["encouragements"] = encouragements
 
 # Register an event
 @client.event
 # When bot is ready
 async def on_ready():
-  print('Logged in as {0.user}'.format(client))
+  print("Logged in as {0.user}".format(client))
 
 @client.event
 # If bot receives a message
@@ -77,7 +77,7 @@ async def on_message(message):
   msg = message.content
 
   # The command to trigger the bot
-  if msg.startswith('!inspire'):
+  if msg.startswith("!inspire"):
     quote = get_quote()
     # The bot's reply
     await message.channel.send(quote)
@@ -87,10 +87,10 @@ async def on_message(message):
     joke = get_joke()
     await message.channel.send(joke)
 
-  if db['responding']:
+  if db["responding"]:
     options = starter_encouragements
-    if 'encouragements' in db.keys():
-      options = options + db['encouragements']
+    if "encouragements" in db.keys():
+      options = options + db["encouragements"]
 
     # Check for any trigger words and send a random encouraging response
     if any(word in msg for word in sad_words):
@@ -99,42 +99,42 @@ async def on_message(message):
       #await message.author.send(random.choice(starter_encouragements))
 
   # Add new message to database from a Discord command
-  if msg.startswith('!new'):
+  if msg.startswith("!new"):
     # Get the text after the !new command
-    encouraging_message = msg.split('!new ',1)[1]
+    encouraging_message = msg.split("!new ",1)[1]
     update_encouragement(encouraging_message)
-    await message.channel.send('New encouraging message added, nice!')
+    await message.channel.send("New encouraging message added, nice!")
   
   # Delete a message
-  if msg.startswith('!del'):
+  if msg.startswith("!del"):
     encouragements = []
-    if 'encouragements' in db.keys():
+    if "encouragements" in db.keys():
       # Get the index of the message to be deleted
-      index = int(msg.split('!del',1)[1])
+      index = int(msg.split("!del",1)[1])
       delete_encouragement(index)
-      encouragements = db['encouragements']
-    await message.channel.send('Current custom responses are: \n')
+      encouragements = db["encouragements"]
+    await message.channel.send("Current custom responses are: \n")
     await message.channel.send(encouragements) # send updated list
 
   # List messages
-  if msg.startswith('!list'):
+  if msg.startswith("!list"):
     encouragements = []
-    if 'encouragements' in db.keys():
-      encouragements = db['encouragements']
-    await message.channel.send('Current custom responses are: \n')
+    if "encouragements" in db.keys():
+      encouragements = db["encouragements"]
+    await message.channel.send("Current custom responses are: \n")
     await message.channel.send(encouragements)
 
   # Set whether the bot responds to trigger words
-  if msg.startswith('!responding'):
-    value = msg.split('!responding ',1)[1]
-    if value.lower() == 'on':
-      db['responding'] = True
-      await message.channel.send('Responding is on.')
+  if msg.startswith("!responding"):
+    value = msg.split("!responding ",1)[1]
+    if value.lower() == "on":
+      db["responding"] = True
+      await message.channel.send("Responding is on.")
     else:
-      db['responding'] = False
-      await message.channel.send('Responding is off. IDGAF about your sadness.')
+      db["responding"] = False
+      await message.channel.send("Responding is off. IDGAF about your sadness.")
 
 # Run the web server
 keep_alive()
 # Run the bot
-client.run(os.getenv('TOKEN'))
+client.run(os.getenv("TOKEN"))
