@@ -76,6 +76,27 @@ async def on_message(message):
   # The content of a user's message
   msg = message.content
 
+  # List the bot's commands
+  if msg.startswith("!commands"):
+    commands = """>>> Commands: \n
+    `!inspire` - Get a random inspiring quote.
+    `!joke` - Get a random joke.
+    `!list` - List the current custom encouraging messages.
+    Use this command before using `!del`, so you know which 
+    message you're about to delete.
+    Type `!new` followed by your message to add a new
+    custom encouraging message, be nice!
+    Type `!del` and a no. from 0 to the current no. of custom
+    messages to delete that message, in case it turns out to be
+    wildly inappropriate. E.g. `!del 0` deletes the first message in the list.
+    `!responding` - use `!responding off` to stop the bot from 
+    responding to trigger words.
+    use `!responding on` to turn it back on. Responding is on 
+    by default.
+    """
+    await message.channel.send(commands)
+
+
   # The command to trigger the bot
   if msg.startswith("!inspire"):
     quote = get_quote()
