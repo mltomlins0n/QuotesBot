@@ -76,6 +76,10 @@ async def on_message(message):
   if message.author == client.user:
     return
 
+  # Reply to a mention
+  if client.user.mentioned_in(message):
+    await message.channel.send("I appreciate the mention, but you don't need to do that. Just type `!commands` for help :sweat_smile:")
+
   # The content of a user's message
   msg = message.content
 
@@ -89,7 +93,7 @@ async def on_message(message):
     message you're about to delete.
     Type `!new` followed by your message to add a new
     custom encouraging message, be nice!
-    Type `!del` and a no. from 0 to the current no. of custom messages to delete that message, in case it turns out to be wildly inappropriate. 
+    Type `!del` and a no. from 0 to the current no. of custom messages to delete that message in case it turns out to be wildly inappropriate. 
     E.g. `!del 0` deletes the first message in the list.
     `!responding` - use `!responding off` to stop the bot from 
     responding to trigger words.
@@ -97,7 +101,6 @@ async def on_message(message):
     by default.
     """
     await message.channel.send(commands)
-
 
   # The command to trigger the bot
   if msg.startswith("!inspire"):
