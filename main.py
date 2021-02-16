@@ -87,6 +87,7 @@ async def on_message(message):
     joke = get_joke()
     await message.channel.send(joke)
 
+  # Check that the bot is responding and that messages exist
   if db["responding"]:
     options = starter_encouragements
     if "encouragements" in db.keys():
