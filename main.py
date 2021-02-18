@@ -1,5 +1,6 @@
 import discord
 import os
+import time
 import requests
 import json
 import random
@@ -14,6 +15,10 @@ baseURL = "https://v2.jokeapi.dev/"
 # List of words that will trigger encouragemenent
 sad_words = ["sad", "depressed", "depressing", "miserable", "unhappy",
 "upsetting", "upset"]
+
+# List of discord emotes for the bot to pick from
+emotes = [":laughing:", ":sweat_smile:", ":joy:", ":rofl:", ":thinking:",
+":neutral_face:", ":grimacing:", ":eyes:"]
 
 # Encouraging messages
 starter_encouragements = [
@@ -38,11 +43,19 @@ def get_quote():
 
 # Get a random joke with no filter
 def get_joke():
-  response = requests.get(baseURL + "/joke/Any?type=single")
+  response = requests.get(baseURL + "/joke/Any?")
   json_data = json.loads(response.text)
-  # Parse the joke from the API response
-  joke = json_data["joke"]
-  return joke
+  jokeType = json_data["type"]
+  # Check whether the joke is a one liner or not
+  if jokeType == "single":
+    # Parse the joke from the API response
+    joke = json_data["joke"]
+    return joke
+  else:
+    setup = json_data["setup"]
+    delivery = json_data["delivery"]
+    twoPartJoke = setup + "\n" + delivery
+    return twoPartJoke
 
 # Allow users to add custom encouraging messages
 def update_encouragement(encouraging_message):
@@ -112,6 +125,9 @@ async def on_message(message):
   if msg.startswith("!joke"):
     joke = get_joke()
     await message.channel.send(joke)
+    time.sleep(5)
+    # Pick a random emote from the emotes list
+    await message.channel.send(random.choice(emotes))
 
   # Check that the bot is responding and that messages exist
   if db["responding"]:
