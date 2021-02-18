@@ -1,10 +1,10 @@
 import discord
 import os
-import time
 import requests
 import json
 import random
 from replit import db
+from asyncio import sleep
 from keep_alive import keep_alive
 
 # Create an instance of a client to connect to discord
@@ -17,8 +17,20 @@ sad_words = ["sad", "depressed", "depressing", "miserable", "unhappy",
 "upsetting", "upset"]
 
 # List of discord emotes for the bot to pick from
-emotes = [":laughing:", ":sweat_smile:", ":joy:", ":rofl:", ":thinking:",
-":neutral_face:", ":grimacing:", ":eyes:"]
+emotes = [
+  ":bread:",
+  ":eyes:",
+  ":grimacing:",
+  ":joy:",
+  ":laughing:",
+  ":middle_finger:"
+  ":neutral_face:",
+  ":ok_hand:",
+  ":rofl:",
+  ":sweat_smile:",
+  ":thinking:",
+  ":unamused:",
+]
 
 # Encouraging messages
 starter_encouragements = [
@@ -125,7 +137,7 @@ async def on_message(message):
   if msg.startswith("!joke"):
     joke = get_joke()
     await message.channel.send(joke)
-    time.sleep(5)
+    await sleep(5)
     # Pick a random emote from the emotes list
     await message.channel.send(random.choice(emotes))
 
