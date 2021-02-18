@@ -130,8 +130,9 @@ async def on_message(message):
   # The command to trigger the bot
   if msg.startswith("!inspire"):
     quote = get_quote()
-    # The bot's reply
-    await message.channel.send(quote)
+    # Mention the user
+    mention = message.author.mention
+    await message.channel.send(mention + " " + quote)
   
   # Tell a joke
   if msg.startswith("!joke"):
