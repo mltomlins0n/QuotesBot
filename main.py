@@ -53,21 +53,38 @@ def get_quote():
   quote = json_data[0] ["q"] + " - " + json_data[0] ["a"]
   return quote
 
-# Get a random joke with no filter
-def get_joke():
-  response = requests.get(baseURL + "/joke/Any?")
-  json_data = json.loads(response.text)
-  jokeType = json_data["type"]
+''' 
+Gets the joke whether it is a single or twopart joke
+param: data - the json data from the jokes API
+returns: Either a one or twopart joke
+'''
+def getJokeType(data):
+  jokeType = data["type"]
   # Check whether the joke is a one liner or not
   if jokeType == "single":
     # Parse the joke from the API response
-    joke = json_data["joke"]
+    joke = data["joke"]
     return joke
   else:
-    setup = json_data["setup"]
-    delivery = json_data["delivery"]
+    setup = data["setup"]
+    delivery = data["delivery"]
     twoPartJoke = setup + "\n" + delivery
     return twoPartJoke
+
+# Get a random joke with no filter
+def get_joke():
+  response = requests.get(baseURL + "/joke/Any?")
+  data = json.loads(response.text)
+  #jokeType = json_data["type"]
+  joke = getJokeType(data)
+  return joke
+
+# Get a safe joke
+def get_safe_joke():
+  response = requests.get(baseURL + "/joke/Any?blacklistFlags=nsfw,explicit")
+  data = json.loads(response.text)
+  joke = getJokeType(data)
+  return joke
 
 # Allow users to add custom encouraging messages
 def update_encouragement(encouraging_message):
@@ -112,7 +129,8 @@ async def on_message(message):
   if msg.startswith("!commands"):
     commands = """>>> Commands: \n
     `!inspire` - Get a random inspiring quote.
-    `!joke` - Get a random joke.
+    `!joke` - Get a random joke. (Random jokes aren't filtered, so it could be racist, sexist etc. You have been warned).
+    `!safe` - Get a safe joke.
     `!list` - List the current custom encouraging messages.
     Use this command before using `!del`, so you know which 
     message you're about to delete.
@@ -134,13 +152,24 @@ async def on_message(message):
     mention = message.author.mention
     await message.channel.send(mention + " " + quote)
   
-  # Tell a joke
-  if msg.startswith("!joke"):
-    joke = get_joke()
+  '''
+  Tell a joke
+  param: joke - the joke returned from a 'get X joke' functions
+  '''
+  async def tell_joke(joke):
     await message.channel.send(joke)
     await sleep(5)
     # Pick a random emote from the emotes list
     await message.channel.send(random.choice(emotes))
+
+  # Jokes
+  if msg.startswith("!joke"):
+    joke = get_joke()
+    await tell_joke(joke)
+
+  if msg.startswith("!safe"):
+    joke = get_safe_joke()
+    await tell_joke(joke)
 
   # Check that the bot is responding and that messages exist
   if db["responding"]:
