@@ -75,7 +75,6 @@ def getJokeType(data):
 def get_joke():
   response = requests.get(baseURL + "/joke/Any?")
   data = json.loads(response.text)
-  #jokeType = json_data["type"]
   joke = getJokeType(data)
   return joke
 
@@ -162,7 +161,7 @@ async def on_message(message):
     # Pick a random emote from the emotes list
     await message.channel.send(random.choice(emotes))
 
-  # Jokes
+  # Commands for telling each type of Joke
   if msg.startswith("!joke"):
     joke = get_joke()
     await tell_joke(joke)
