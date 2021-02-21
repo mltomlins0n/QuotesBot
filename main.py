@@ -129,7 +129,7 @@ async def on_message(message):
   if msg.startswith("!commands"):
     commands = """>>> Commands: \n
     `!inspire` - Get a random inspiring quote.
-    `!joke` - Get a random joke. (Random jokes aren't filtered, so it could be racist, sexist etc. You have been warned).
+    `!joke` - Get a random joke. **(Random jokes aren't filtered, so it could be racist, sexist etc. You have been warned).**
     `!safe` - Get a safe joke.
     `!list` - List the current custom encouraging messages.
     Use this command before using `!del`, so you know which 
