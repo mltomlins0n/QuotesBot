@@ -23,7 +23,8 @@ emotes = [
   ":grimacing:",
   ":joy:",
   ":laughing:",
-  ":middle_finger:"
+  ":middle_finger:" ":neutral_face:",
+  ":middle_finger:",
   ":neutral_face:",
   ":ok_hand:",
   ":rofl:",
