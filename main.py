@@ -12,6 +12,12 @@ client = discord.Client()
 # The default URL of the jokes API to build a request from
 baseURL = "https://v2.jokeapi.dev/"
 
+# The categories from JokeAPI docs
+categories = ["Programming", "Misc", "Dark", "Pun", "Spooky", "Christmas"]
+
+# The flags to blacklist certain results from appearing in the API response
+blacklistFlags = ["nsfw", "religious", "political", "racist", "sexist", "explicit"]
+
 # List of words that will trigger encouragemenent
 sad_words = ["sad", "depressed", "depressing", "miserable", "unhappy",
 "upsetting", "upset"]
@@ -72,16 +78,13 @@ def getJokeType(data):
     twoPartJoke = setup + "\n" + delivery
     return twoPartJoke
 
-# Get a random joke with no filter
-def get_joke():
-  response = requests.get(baseURL + "/joke/Any?")
-  data = json.loads(response.text)
-  joke = getJokeType(data)
-  return joke
-
-# Get a safe joke
-def get_safe_joke():
-  response = requests.get(baseURL + "/joke/Any?blacklistFlags=nsfw,explicit")
+''' 
+Get a random joke
+Param: options - a string of options for the API call
+returns: A dict of the response from the API
+'''
+def get_joke(options):
+  response = requests.get(baseURL + "/joke/" + options)
   data = json.loads(response.text)
   joke = getJokeType(data)
   return joke
@@ -131,6 +134,8 @@ async def on_message(message):
     `!inspire` - Get a random inspiring quote.
     `!joke` - Get a random joke. **(Random jokes aren't filtered, so it could be racist, sexist etc. You have been warned).**
     `!safe` - Get a safe joke.
+    `!pun` - Get a pun. It's probably stupid. :sweat_smile:
+    `!nerd` - Get a programming || coding joke. You nerd.
     `!list` - List the current custom encouraging messages.
     Use this command before using `!del`, so you know which 
     message you're about to delete.
@@ -163,12 +168,20 @@ async def on_message(message):
     await message.channel.send(random.choice(emotes))
 
   # Commands for telling each type of Joke
-  if msg.startswith("!joke"):
-    joke = get_joke()
+  if msg.startswith("!joke"): # Any joke, except for programming jokes with no filters
+    joke = get_joke("Miscellaneous,Dark,Pun,Spooky,Christmas")
     await tell_joke(joke)
 
-  if msg.startswith("!safe"):
-    joke = get_safe_joke()
+  if msg.startswith("!safe"): # Safe jokes
+    joke = get_joke("Miscellaneous,Dark,Pun,Spooky,Christmas?blacklistFlags=nsfw,religious,political,racist,sexist,explicit")
+    await tell_joke(joke)
+
+  if msg.startswith("!pun"): # Puns
+    joke = get_joke("Pun")
+    await tell_joke(joke)
+
+  if msg.startswith("!nerd"): # Programming jokes
+    joke = get_joke("Programming")
     await tell_joke(joke)
 
   # Check that the bot is responding and that messages exist
