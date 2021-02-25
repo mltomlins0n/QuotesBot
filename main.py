@@ -126,7 +126,8 @@ async def on_message(message):
     await message.channel.send("I appreciate the mention, but you don't need to do that. Just type `!commands` for help :sweat_smile:")
 
   # The content of a user's message
-  msg = message.content
+  # Using lower() in case a user types a command IN CAPS
+  msg = message.content.lower()
 
   # List the bot's commands
   if msg.startswith("!commands"):
