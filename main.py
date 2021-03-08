@@ -11,8 +11,6 @@ from keep_alive import keep_alive
 client = discord.Client()
 # The default URL of the jokes API to build a request from
 jokes_url = "https://v2.jokeapi.dev/"
-# Url for the facts API
-#facts_url = "https://uselessfacts.jsph.pl/{}.json?language=en".format()
 
 # The categories from JokeAPI docs
 categories = ["Programming", "Misc", "Dark", "Pun", "Spooky", "Christmas"]
@@ -90,7 +88,12 @@ def get_joke(options):
   data = json.loads(response.text)
   joke = getJokeType(data)
   return joke
-
+'''
+Get a random fact
+Param: option - a string of options to pass to the URL, 
+use this to access different endpoints
+returns: The text param from the json data, the fact
+'''
 def get_fact(option):
   facts_url = "https://uselessfacts.jsph.pl/{}.json?language=en".format(option)
   response = requests.get(facts_url)
@@ -147,6 +150,7 @@ async def on_message(message):
     `!pun` - Get a pun. It's probably stupid. :sweat_smile:
     `!nerd` - Get a programming || coding joke. You nerd.
     `!fact` - Get a random (possibly useless) fact.
+    `!today` - Get the fact of the day.
     `!list` - List the current custom encouraging messages.
     Use this command before using `!del`, so you know which 
     message you're about to delete.
@@ -197,6 +201,10 @@ async def on_message(message):
 
   if msg.startswith("!fact"): # Random fact
     fact = get_fact("random")
+    await message.channel.send(">>> " + fact)
+  
+  if msg.startswith("!today"): # Fact of the day
+    fact = get_fact("today")
     await message.channel.send(">>> " + fact)
 
   # Check that the bot is responding and that messages exist
