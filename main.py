@@ -176,7 +176,7 @@ async def on_message(message):
     await message.channel.send(">>> " + joke)
     await sleep(5)
     # Pick a random emote from the emotes list
-    await message.channel.send(">>> " + random.choice(emotes))
+    await message.channel.send(random.choice(emotes))
 
   # Commands for telling each type of Joke
   if msg.startswith("!joke"): # Any joke, except for programming jokes with no filters
