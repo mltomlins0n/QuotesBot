@@ -166,17 +166,17 @@ async def on_message(message):
     quote = get_quote()
     # Mention the user
     mention = message.author.mention
-    await message.channel.send(">>>" + mention + " " + quote)
+    await message.channel.send(">>> " + mention + " " + quote)
   
   '''
   Tell a joke
   param: joke - the joke returned from a 'get X joke' functions
   '''
   async def tell_joke(joke):
-    await message.channel.send(">>>" + joke)
+    await message.channel.send(">>> " + joke)
     await sleep(5)
     # Pick a random emote from the emotes list
-    await message.channel.send(">>>" + random.choice(emotes))
+    await message.channel.send(">>> " + random.choice(emotes))
 
   # Commands for telling each type of Joke
   if msg.startswith("!joke"): # Any joke, except for programming jokes with no filters
@@ -197,7 +197,7 @@ async def on_message(message):
 
   if msg.startswith("!fact"): # Random fact
     fact = get_fact("random")
-    await message.channel.send(">>>" + fact)
+    await message.channel.send(">>> " + fact)
 
   # Check that the bot is responding and that messages exist
   if db["responding"]:
@@ -235,7 +235,7 @@ async def on_message(message):
     if "encouragements" in db.keys():
       encouragements = db["encouragements"]
     await message.channel.send(">>> Current custom responses are: \n")
-    await message.channel.send(">>>" + encouragements)
+    await message.channel.send(">>> " + encouragements)
 
   # Set whether the bot responds to trigger words
   if msg.startswith("!responding"):
