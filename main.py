@@ -11,6 +11,8 @@ from keep_alive import keep_alive
 client = discord.Client()
 # The default URL of the jokes API to build a request from
 jokes_url = "https://v2.jokeapi.dev/"
+# Url for the facts API
+#facts_url = "https://uselessfacts.jsph.pl/{}.json?language=en".format()
 
 # The categories from JokeAPI docs
 categories = ["Programming", "Misc", "Dark", "Pun", "Spooky", "Christmas"]
@@ -89,6 +91,13 @@ def get_joke(options):
   joke = getJokeType(data)
   return joke
 
+def get_fact(option):
+  facts_url = "https://uselessfacts.jsph.pl/{}.json?language=en".format(option)
+  response = requests.get(facts_url)
+  data = json.loads(response.text)
+  fact = data["text"]
+  return fact
+
 # Allow users to add custom encouraging messages
 def update_encouragement(encouraging_message):
   # Get all messages, add the new one and resave the database
@@ -137,6 +146,7 @@ async def on_message(message):
     `!safe` - Get a safe joke.
     `!pun` - Get a pun. It's probably stupid. :sweat_smile:
     `!nerd` - Get a programming || coding joke. You nerd.
+    `!fact` - Get a random (possibly useless) fact.
     `!list` - List the current custom encouraging messages.
     Use this command before using `!del`, so you know which 
     message you're about to delete.
@@ -156,17 +166,17 @@ async def on_message(message):
     quote = get_quote()
     # Mention the user
     mention = message.author.mention
-    await message.channel.send(mention + " " + quote)
+    await message.channel.send(">>>" + mention + " " + quote)
   
   '''
   Tell a joke
   param: joke - the joke returned from a 'get X joke' functions
   '''
   async def tell_joke(joke):
-    await message.channel.send(joke)
+    await message.channel.send(">>>" + joke)
     await sleep(5)
     # Pick a random emote from the emotes list
-    await message.channel.send(random.choice(emotes))
+    await message.channel.send(">>>" + random.choice(emotes))
 
   # Commands for telling each type of Joke
   if msg.startswith("!joke"): # Any joke, except for programming jokes with no filters
@@ -185,6 +195,10 @@ async def on_message(message):
     joke = get_joke("Programming")
     await tell_joke(joke)
 
+  if msg.startswith("!fact"): # Random fact
+    fact = get_fact("random")
+    await message.channel.send(">>>" + fact)
+
   # Check that the bot is responding and that messages exist
   if db["responding"]:
     options = starter_encouragements
@@ -202,7 +216,7 @@ async def on_message(message):
     # Get the text after the !new command
     encouraging_message = msg.split("!new ",1)[1]
     update_encouragement(encouraging_message)
-    await message.channel.send("New encouraging message added, nice!")
+    await message.channel.send(">>> New encouraging message added, nice!")
   
   # Delete a message
   if msg.startswith("!del"):
@@ -220,8 +234,8 @@ async def on_message(message):
     encouragements = []
     if "encouragements" in db.keys():
       encouragements = db["encouragements"]
-    await message.channel.send("Current custom responses are: \n")
-    await message.channel.send(encouragements)
+    await message.channel.send(">>> Current custom responses are: \n")
+    await message.channel.send(">>>" + encouragements)
 
   # Set whether the bot responds to trigger words
   if msg.startswith("!responding"):
