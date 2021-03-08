@@ -10,7 +10,7 @@ from keep_alive import keep_alive
 # Create an instance of a client to connect to discord
 client = discord.Client()
 # The default URL of the jokes API to build a request from
-baseURL = "https://v2.jokeapi.dev/"
+jokes_url = "https://v2.jokeapi.dev/"
 
 # The categories from JokeAPI docs
 categories = ["Programming", "Misc", "Dark", "Pun", "Spooky", "Christmas"]
@@ -84,7 +84,7 @@ Param: options - a string of options for the API call
 returns: A dict of the response from the API
 '''
 def get_joke(options):
-  response = requests.get(baseURL + "/joke/" + options)
+  response = requests.get(jokes_url + "/joke/" + options)
   data = json.loads(response.text)
   joke = getJokeType(data)
   return joke
