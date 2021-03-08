@@ -14,6 +14,10 @@ A simple Discord bot to provide encouragement, quotes, and jokes from a couple o
 
 `!nerd` - Get a programming || coding joke. You nerd.
 
+`!fact` - Get a random (possibly useless) fact.
+
+`!today` - Get the fact of the day.
+
 `!list` - List the current custom encouraging messages.
 Use this command before using `!del`, so you know which 
 message you're about to delete.
