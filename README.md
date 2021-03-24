@@ -6,7 +6,7 @@ A simple Discord bot to provide encouragement, quotes, and jokes from a couple o
 
 `!inspire` - Get a random inspiring quote. 
 
-`!joke` - Get a random joke. **(Random jokes aren't filtered, so it could be racist, sexisc. You have been warned).**
+`!joke` - Get a random joke. **(Random jokes aren't filtered, so it could be racist, sexist etc. You have been warned).**
 
 `!safe` - Get a safe joke.
 
